@@ -1,4 +1,7 @@
 # UOCIS322 - Project 1 #
+Name: Austin Warren
+Info email: awarren3@uoregon.edu
+Description: Handling error codes to build a simple web server.
 
 This project will get you started with creating a simple webpage server.
 
