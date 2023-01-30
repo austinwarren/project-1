@@ -88,24 +88,28 @@ def respond(sock):
     request = sock.recv(1024)  # We accept only short requests
     request = str(request, encoding='utf-8', errors='strict')
     parts = request.split()
-    path = get_options().DOCROOT + parts[1]
+    path = get_options().DOCROOT + '/' + parts[1]
     log.info("--- Received request ----")
     log.info("Request was {}\n***\n".format(request))
     
     if len(parts) > 1 and parts[0] == "GET":
         if os.path.exists(path):
-            transmit(STATUS_OK, sock)
+            with open(path)as f:
+                content = f.read()
+                transmit(STATUS_OK, sock)
+                transmit(content, sock)
+
 
 
         elif ("~" in path or ".." in path):
             log.info("Error 403: {}".format(request))
             transmit(STATUS_FORBIDDEN, sock)
-            transmit("\nThe characters used are forbidden: {}\n".format(request), sock)
+            transmit("<h1>The characters used are forbidden.</h1>", sock)
 
         else:
             log.info("Error 404: {}".format(request))
             transmit(STATUS_NOT_FOUND, sock)
-            transmit("\nThe file is not found: {}\n".format(request), sock)
+            transmit("\nThe file is not found\n", sock)
 
     else:
         log.info("Unhandled request: {}".format(request))
